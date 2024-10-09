@@ -1,0 +1,55 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.navbar{
+    width: 1200px;
+    height: auto; /* Let the height adjust based on content */
+    margin: auto;
+    display: flex;
+    flex-direction: column; /* Stack the logo and menu vertically */
+    align-items: flex-start; /* Align everything to the left */
+}
+
+.icon{
+    width: auto;
+    float: left;
+    height: auto;
+}
+
+.logo {
+    font-size: 90px; 
+    margin-left: 20px; 
+    margin-top: 20px; 
+    font-family: 'Bebas Neue', sans-serif; /* Change the font of the logo */
+}
+
+.menu {
+    display: flex; /* Display the menu as a flex container */
+    flex-direction: row; /* Align the items horizontally (column would make it vertical) */
+    gap: 80px; /* Adds space between each menu item */
+    margin-left: 20px; /* Align the menu with the logo */
+    margin-top: 15px;  /* Add space below the logo */
+}
+
+.menu li {
+    list-style: none;
+    margin-bottom: 10px; /* Add space between menu items */
+}
+
+.menu a {
+    text-decoration: none; /* Removes underline
+    font-size: 20px; /* Adjust menu font size */
+    color: #000; /* Set a color for the links */
+    font-weight: bold; /* makes the text bold */
+    font-family: 'Verdana', sans-serif; /* Change the font of the menu */
+}
+
+
+
+#visualizer {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-top: 20px;
+}
