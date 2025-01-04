@@ -144,3 +144,133 @@ document.getElementById('binary').addEventListener('click', function(event) {
     
     visualizeBinarySearch(array, keyTarget);
 });
+
+function visualizeGraph(graph, visitedNodes = []) {
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.clearRect(0, 0, width, height); // Clear canvas
+
+    const radius = 20; // Node radius
+    const nodePositions = {};
+
+    // Calculate positions for graph nodes (circular layout)
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const nodeCount = Object.keys(graph).length;
+    const angleStep = (2 * Math.PI) / nodeCount;
+
+    Object.keys(graph).forEach((node, index) => {
+        const angle = index * angleStep;
+        nodePositions[node] = {
+            x: centerX + Math.cos(angle) * 150,
+            y: centerY + Math.sin(angle) * 150
+        };
+    });
+
+    // Draw edges
+    ctx.strokeStyle = '#000';
+    Object.keys(graph).forEach((node) => {
+        const { x: x1, y: y1 } = nodePositions[node];
+        graph[node].forEach((neighbor) => {
+            const { x: x2, y: y2 } = nodePositions[neighbor];
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        });
+    });
+
+    // Draw nodes
+    Object.keys(nodePositions).forEach((node) => {
+        const { x, y } = nodePositions[node];
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = visitedNodes.includes(node) ? 'green' : 'darkblue'; // Highlight visited nodes
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(node, x, y); // Node label
+    });
+}
+
+// DFS Visualization
+function visualizeDFS(graph, startNode) {
+    clearVisualization();
+    const visitedNodes = [];
+    const stack = [startNode];
+
+    function dfsStep() {
+        if (stack.length > 0) {
+            const currentNode = stack.pop();
+            if (!visitedNodes.includes(currentNode)) {
+                visitedNodes.push(currentNode);
+                stack.push(...graph[currentNode].filter((neighbor) => !visitedNodes.includes(neighbor)));
+                visualizeGraph(graph, visitedNodes); // Update graph visualization
+                visualizationInProgress = setTimeout(dfsStep, 1000); // Delay for animation
+            }
+        }
+    }
+
+    dfsStep(); // Start DFS
+}
+
+// BFS Visualization
+function visualizeBFS(graph, startNode) {
+    clearVisualization();
+    const visitedNodes = [];
+    const queue = [startNode];
+
+    function bfsStep() {
+        if (queue.length > 0) {
+            const currentNode = queue.shift();
+            if (!visitedNodes.includes(currentNode)) {
+                visitedNodes.push(currentNode);
+                queue.push(...graph[currentNode].filter((neighbor) => !visitedNodes.includes(neighbor)));
+                visualizeGraph(graph, visitedNodes); // Update graph visualization
+                visualizationInProgress = setTimeout(bfsStep, 1000); // Delay for animation
+            }
+        }
+    }
+
+    bfsStep(); // Start BFS
+}
+
+// Event listeners for DFS and BFS
+document.getElementById('dfs').addEventListener('click', function (event) {
+    event.preventDefault();
+    clearVisualization();
+
+    // Example graph
+    const graph = {
+        A: ['B', 'C'],
+        B: ['A', 'D', 'E'],
+        C: ['A', 'F'],
+        D: ['B'],
+        E: ['B', 'F'],
+        F: ['C', 'E']
+    };
+
+    visualizeDFS(graph, 'A'); // Start DFS from node 'A'
+});
+
+document.getElementById('bfs').addEventListener('click', function (event) {
+    event.preventDefault();
+    clearVisualization();
+
+    // Example graph
+    const graph = {
+        A: ['B', 'C'],
+        B: ['A', 'D', 'E'],
+        C: ['A', 'F'],
+        D: ['B'],
+        E: ['B', 'F'],
+        F: ['C', 'E']
+    };
+
+    visualizeBFS(graph, 'A'); // Start BFS from node 'A'
+});
